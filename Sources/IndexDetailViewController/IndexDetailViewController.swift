@@ -49,10 +49,6 @@ public class IndexDetailViewController: UIViewController {
         stackView.axis = .horizontal
         view = stackView
         
-        setupArrangedViews()
-    }
-    
-    func setupArrangedViews() {
         indexController.title = "index"
         indexController.view.backgroundColor = .blue
         
@@ -64,19 +60,44 @@ public class IndexDetailViewController: UIViewController {
 
         stackView.addArrangedSubview(detailNavigation.view)
     }
+    
+    public override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        updateCollapsedForTraits()
+    }
 
+    override public func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        updateCollapsedForTraits()
+    }
+
+    func updateCollapsedForTraits() {
+        
+            switch direction {
+                case .vertical:
+                    collapsed = traitCollection.verticalSizeClass == .compact
+
+                case .horizontal:
+                    collapsed = traitCollection.horizontalSizeClass == .compact
+                
+                default:
+                    break
+            }
+    }
+    
     func transitionToCollapsed() {
         print("becoming collapsed")
         
         stackView.removeArrangedSubview(indexController.view)
         indexController.removeFromParent()
         indexController.view.removeFromSuperview()
-        indexController.view.setNeedsLayout()
 
         print("detail vcs: \(detailNavigation.viewControllers.map { $0.title!})")
         var items = detailNavigation.viewControllers
         items.remove(at: 0)
         items.insert(indexController, at: 0)
+
+        indexController.view.frame.size = detailNavigation.view.frame.size
         detailNavigation.setViewControllers(items, animated: false)
         detailController.view.removeFromSuperview()
         print("detail vcs: \(detailNavigation.viewControllers.map { $0.title!})")
@@ -95,7 +116,6 @@ public class IndexDetailViewController: UIViewController {
         indexController.removeFromParent()
         stackView.insertArrangedSubview(indexController.view, at: 0)
         addChild(indexController)
-        indexController.view.setNeedsLayout()
     }
     
     public func showDetail(_ viewController: UIViewController) {

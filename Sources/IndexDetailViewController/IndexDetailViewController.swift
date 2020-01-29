@@ -58,8 +58,9 @@ public class IndexDetailViewController: UIViewController {
     // MARK: Public API
     
     public func showDetail(_ viewController: UIViewController) {
-        detailNavigation.popToRootViewController(animated: false)
-        detailNavigation.pushViewController(viewController, animated: false)
+        let items = isCollapsed ? [detailRootController!, indexController!] : [detailRootController!]
+        detailNavigation.setViewControllers(items, animated: false)
+        detailNavigation.pushViewController(viewController, animated: isCollapsed)
     }
     
     public func pushDetail(_ viewController: UIViewController) {
@@ -74,7 +75,6 @@ public extension IndexDetailViewController {
         addChild(indexController)
 
         detailNavigation = UINavigationController(rootViewController: detailRootController)
-        detailNavigation.view.backgroundColor = .red
         detailNavigation.delegate = self
         addChild(detailNavigation)
 
@@ -87,6 +87,7 @@ public extension IndexDetailViewController {
         stackView.addArrangedSubview(indexController.view)
         addChild(indexController)
 
+        indexController.navigationItem.hidesBackButton = true
         stackView.addArrangedSubview(detailNavigation.view)
     }
 
@@ -122,34 +123,46 @@ fileprivate extension IndexDetailViewController {
         indexDetailChannel.debug("becoming collapsed")
         logNavigationStack(label: "views in stack were:")
 
-        // remove index view from the stack
+        let indexView = indexController.view!
+        let detailView = detailNavigation.view!
         
         func hideIndexViewTemporarily() {
+            // hide the index view or the navagation view
+            // we animate this, so that the stack view transitions smoothly from two to one view
             if detailNavigation.viewControllers.count == 1 {
-                detailNavigation.view.isHidden = true
+                detailView.isHidden = true
                 detailNavigation.isNavigationBarHidden = true
             } else {
-                indexController.view.isHidden = true
+                indexView.isHidden = true
             }
         }
 
         func updateNavigation() {
-            stackView.removeArrangedSubview(indexController.view)
+            print("indexController parent is \(indexController.parent)")
+            // remove index view from the stack
+            print("indexController view superview is \(indexController.view.superview)")
+            stackView.removeArrangedSubview(indexView)
+            print("indexController view superview is \(indexController.view.superview)")
             indexController.removeFromParent()
-            indexController.view.removeFromSuperview()
+            indexView.removeFromSuperview()
+            print("indexController view superview is \(indexController.view.superview)")
+            print("indexController parent is \(indexController.parent)")
 
-            // remove detail root from the navigation stack
+            // insert the index view into the navigation stack
             var items = detailNavigation.viewControllers
-            assert(items[0] === detailRootController)
-            items.remove(at: 0)
-            detailRootController.view.removeFromSuperview()
-
-            // and replace it with the index
-            items.insert(indexController, at: 0)
-            indexController.view.frame.size = detailNavigation.view.frame.size
-            indexController.view.isHidden = false
-            detailNavigation.view.isHidden = false
+            items.insert(indexController, at: 1)
+            indexView.isHidden = false
+            detailView.isHidden = false
             detailNavigation.setViewControllers(items, animated: false)
+            DispatchQueue.main.async {
+                print("indexController view superview is \(self.indexController.view.superview)")
+                print("indexController parent is \(self.indexController.parent)")
+//                indexView.frame = detailView.frame
+//                indexView.setNeedsLayout()
+//                indexView.setNeedsUpdateConstraints()
+                print("indexView is \(indexView)")
+                print(indexView.constraints)
+            }
             self.logNavigationStack(label: "views in stack now:")
         }
         
@@ -170,15 +183,19 @@ fileprivate extension IndexDetailViewController {
         indexDetailChannel.debug("becoming uncollapsed")
         logNavigationStack(label: "views in stack were:")
         
+        print("indexController parent is \(indexController.parent)")
+
+        // remove the index view from the navigation stack
         var items = detailNavigation.viewControllers
-        items.remove(at: 0)
-        items.insert(detailRootController, at: 0)
+        items.remove(at: 1)
         detailNavigation.setViewControllers(items, animated: false)
         indexController.view.isHidden = true
+        print("indexController view superview is \(indexController.view.superview)")
         indexController.view.removeFromSuperview()
         indexController.removeFromParent()
         stackView.insertArrangedSubview(indexController.view, at: 0)
         addChild(indexController)
+        print("indexController parent is \(indexController.parent)")
 
         UIView.animate(withDuration: 0.5,
                        animations: {
@@ -202,13 +219,8 @@ fileprivate extension IndexDetailViewController {
 // MARK: UINavigation Delegate
 
 extension IndexDetailViewController: UINavigationControllerDelegate {
-    
     public func navigationController(_ navigationController: UINavigationController, willShow viewController: UIViewController, animated: Bool) {
         indexDetailChannel.debug("showing \(viewController.title ?? String(describing: viewController))")
-        detailNavigation.isNavigationBarHidden = navigationController.viewControllers.firstIndex(of: viewController) == 0
-    }
-    
-    public func navigationController(_ navigationController: UINavigationController, didShow viewController: UIViewController, animated: Bool) {
-        print("did show")
+        detailNavigation.isNavigationBarHidden = (viewController === indexController) || (viewController === detailRootController)
     }
 }

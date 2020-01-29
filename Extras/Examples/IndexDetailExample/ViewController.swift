@@ -61,6 +61,12 @@ class ViewController: UIViewController {
 class ExampleIndexViewController: UIViewController {
     var indexDetailViewController: IndexDetailViewController!
     
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        print(view.frame)
+        print(view.bounds)
+    }
+    
     @IBAction func addDetail(_ sender: Any) {
         let detailView = storyboard?.instantiateViewController(identifier: "Detail") as! ExampleDetailViewController
         detailView.indexDetailViewController = indexDetailViewController

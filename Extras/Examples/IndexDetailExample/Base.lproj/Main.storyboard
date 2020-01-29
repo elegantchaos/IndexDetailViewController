@@ -11,7 +11,7 @@
         <scene sceneID="tne-QT-ifu">
             <objects>
                 <viewController id="BYZ-38-t0r" customClass="ViewController" customModule="IndexDetailExample" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
+                    <view key="view" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="8bC-Xf-vdC">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
@@ -150,31 +150,35 @@ Shown When Nothing Else Is Pushed</string>
         <scene sceneID="gEZ-El-2mP">
             <objects>
                 <viewController storyboardIdentifier="Index" id="MUh-Dg-M6w" customClass="ExampleIndexViewController" customModule="IndexDetailExample" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="d8i-cO-Lkj">
+                    <view key="view" contentMode="scaleToFill" horizontalHuggingPriority="249" verticalHuggingPriority="249" translatesAutoresizingMaskIntoConstraints="NO" id="d8i-cO-Lkj">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
                         <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="249" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xl6-0b-gqq">
-                                <rect key="frame" x="148.66666666666666" y="64" width="78" height="30"/>
-                                <state key="normal" title="Push Detail"/>
-                                <connections>
-                                    <action selector="addDetail:" destination="MUh-Dg-M6w" eventType="touchUpInside" id="z9f-Um-WTi"/>
-                                </connections>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="249" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="nrJ-c3-Chv">
-                                <rect key="frame" x="147" y="114" width="81" height="30"/>
-                                <state key="normal" title="Show Detail"/>
-                                <connections>
-                                    <action selector="showDetail:" destination="MUh-Dg-M6w" eventType="touchUpInside" id="D2O-sd-XW6"/>
-                                </connections>
-                            </button>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillEqually" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="FRh-dV-ngl">
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
+                                <subviews>
+                                    <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="249" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xl6-0b-gqq">
+                                        <rect key="frame" x="0.0" y="0.0" width="375" height="396"/>
+                                        <state key="normal" title="Push Detail"/>
+                                        <connections>
+                                            <action selector="addDetail:" destination="MUh-Dg-M6w" eventType="touchUpInside" id="z9f-Um-WTi"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="249" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="nrJ-c3-Chv">
+                                        <rect key="frame" x="0.0" y="416" width="375" height="396"/>
+                                        <state key="normal" title="Show Detail"/>
+                                        <connections>
+                                            <action selector="showDetail:" destination="MUh-Dg-M6w" eventType="touchUpInside" id="D2O-sd-XW6"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                            </stackView>
                         </subviews>
-                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <color key="backgroundColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="0.20000000000000001" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
-                            <constraint firstItem="lp2-UY-fz8" firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="nrJ-c3-Chv" secondAttribute="bottom" constant="20" id="Oqt-kZ-yjS"/>
-                            <constraint firstItem="nrJ-c3-Chv" firstAttribute="top" secondItem="xl6-0b-gqq" secondAttribute="bottom" constant="20" id="cpc-sh-d5v"/>
-                            <constraint firstItem="xl6-0b-gqq" firstAttribute="top" secondItem="lp2-UY-fz8" secondAttribute="top" constant="20" id="e8n-Na-9LU"/>
-                            <constraint firstItem="xl6-0b-gqq" firstAttribute="centerX" secondItem="d8i-cO-Lkj" secondAttribute="centerX" id="oQf-Qb-ckk"/>
-                            <constraint firstItem="nrJ-c3-Chv" firstAttribute="centerX" secondItem="d8i-cO-Lkj" secondAttribute="centerX" id="tpW-HJ-QSM"/>
+                            <constraint firstItem="FRh-dV-ngl" firstAttribute="centerX" secondItem="d8i-cO-Lkj" secondAttribute="centerX" id="2R5-0n-saW"/>
+                            <constraint firstItem="FRh-dV-ngl" firstAttribute="height" secondItem="d8i-cO-Lkj" secondAttribute="height" id="Ls4-Oj-Dgk"/>
+                            <constraint firstItem="FRh-dV-ngl" firstAttribute="width" secondItem="d8i-cO-Lkj" secondAttribute="width" id="wFP-si-Pcb"/>
+                            <constraint firstItem="FRh-dV-ngl" firstAttribute="centerY" secondItem="d8i-cO-Lkj" secondAttribute="centerY" id="y9f-fX-gc6"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="lp2-UY-fz8"/>
                     </view>

@@ -4,13 +4,19 @@
 // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
 import UIKit
+import Logger
+
+let indexDetailChannel = Channel("com.elegantchaos.IndexDetail")
 
 public class IndexDetailViewController: UIViewController {
     
-    public var collapsed = false {
+    /// Indicates whether the view is in collapsed or normal state.
+    /// In the collapsed state, the index becomes the root view of the navigation stack.
+    /// In the normal state, it is a separate view to the left/top of the navigation stack.
+
+    public var isCollapsed = false {
         willSet {
-            if newValue != collapsed {
-                print("changed collapsed")
+            if newValue != isCollapsed {
                 DispatchQueue.main.async {
                     if newValue {
                         self.transitionToCollapsed()
@@ -24,21 +30,21 @@ public class IndexDetailViewController: UIViewController {
     
     public var direction = NSLayoutConstraint.Axis.horizontal {
         didSet {
-            print("changed direction")
+            indexDetailChannel.debug("changed direction to \(direction)")
             stackView.axis = direction
         }
     }
     
     public var indexController: UIViewController!
-    public var detailController: UIViewController!
+    public var detailRootController: UIViewController!
 
-    var detailNavigation: UINavigationController!
-    var stackView: UIStackView!
+    internal var detailNavigation: UINavigationController!
+    internal var stackView: UIStackView!
     
     override public func viewDidLoad() {
         addChild(indexController)
 
-        detailNavigation = UINavigationController(rootViewController: detailController)
+        detailNavigation = UINavigationController(rootViewController: detailRootController)
         detailNavigation.view.backgroundColor = .red
         detailNavigation.delegate = self
         addChild(detailNavigation)
@@ -48,12 +54,6 @@ public class IndexDetailViewController: UIViewController {
         stackView.distribution = .fillEqually
         stackView.axis = .horizontal
         view = stackView
-        
-        indexController.title = "index"
-        indexController.view.backgroundColor = .blue
-        
-        detailController.title = "detail root"
-        detailController.view.backgroundColor = .green
         
         stackView.addArrangedSubview(indexController.view)
         addChild(indexController)
@@ -75,10 +75,10 @@ public class IndexDetailViewController: UIViewController {
         
             switch direction {
                 case .vertical:
-                    collapsed = traitCollection.verticalSizeClass == .compact
+                    isCollapsed = traitCollection.verticalSizeClass == .compact
 
                 case .horizontal:
-                    collapsed = traitCollection.horizontalSizeClass == .compact
+                    isCollapsed = traitCollection.horizontalSizeClass == .compact
                 
                 default:
                     break
@@ -86,40 +86,51 @@ public class IndexDetailViewController: UIViewController {
     }
     
     func transitionToCollapsed() {
-        print("becoming collapsed")
-        
+        indexDetailChannel.debug("becoming collapsed")
+        logStack(label: "views in stack were:")
+
+        // remove index view from the stack
         stackView.removeArrangedSubview(indexController.view)
         indexController.removeFromParent()
         indexController.view.removeFromSuperview()
 
-        print("detail vcs: \(detailNavigation.viewControllers.map { $0.title!})")
+        // remove detail root from the navigation stack
         var items = detailNavigation.viewControllers
+        assert(items[0] === detailRootController)
         items.remove(at: 0)
-        items.insert(indexController, at: 0)
+        detailRootController.view.removeFromSuperview()
 
+        // and replace it with the index
+        items.insert(indexController, at: 0)
         indexController.view.frame.size = detailNavigation.view.frame.size
+        
         detailNavigation.setViewControllers(items, animated: false)
-        detailController.view.removeFromSuperview()
-        print("detail vcs: \(detailNavigation.viewControllers.map { $0.title!})")
+        logStack(label: "views in stack now:")
     }
     
     func transitionFromCollapsed() {
-        print("becoming uncollapsed")
-        print("detail vcs: \(detailNavigation.viewControllers.map { $0.title!})")
+        indexDetailChannel.debug("becoming uncollapsed")
+        logStack(label: "views in stack were:")
+        
         var items = detailNavigation.viewControllers
         items.remove(at: 0)
-        items.insert(detailController, at: 0)
+        items.insert(detailRootController, at: 0)
         detailNavigation.setViewControllers(items, animated: false)
-        print("detail vcs: \(detailNavigation.viewControllers.map { $0.title!})")
 
         indexController.view.removeFromSuperview()
         indexController.removeFromParent()
         stackView.insertArrangedSubview(indexController.view, at: 0)
         addChild(indexController)
+        logStack(label: "views in stack now:")
+    }
+    
+    func logStack(label: String) {
+        indexDetailChannel.debug("\(label): \(detailNavigation.viewControllers.map { $0.title ?? String(describing: $0) })")
     }
     
     public func showDetail(_ viewController: UIViewController) {
-        
+        detailNavigation.popToRootViewController(animated: false)
+        detailNavigation.pushViewController(viewController, animated: false)
     }
     
     public func pushDetail(_ viewController: UIViewController) {
@@ -129,7 +140,6 @@ public class IndexDetailViewController: UIViewController {
 
 extension IndexDetailViewController: UINavigationControllerDelegate {
     public func navigationController(_ navigationController: UINavigationController, willShow viewController: UIViewController, animated: Bool) {
-        print(viewController.title)
-        print(viewController.view)
+        indexDetailChannel.debug("showing \(viewController.title ?? String(describing: viewController))")
     }
 }

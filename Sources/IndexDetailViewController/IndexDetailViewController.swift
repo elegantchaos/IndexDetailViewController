@@ -127,6 +127,7 @@ fileprivate extension IndexDetailViewController {
         func hideIndexViewTemporarily() {
             if detailNavigation.viewControllers.count == 1 {
                 detailNavigation.view.isHidden = true
+                detailNavigation.isNavigationBarHidden = true
             } else {
                 indexController.view.isHidden = true
             }
@@ -147,8 +148,8 @@ fileprivate extension IndexDetailViewController {
             items.insert(indexController, at: 0)
             indexController.view.frame.size = detailNavigation.view.frame.size
             indexController.view.isHidden = false
-            detailNavigation.setViewControllers(items, animated: false)
             detailNavigation.view.isHidden = false
+            detailNavigation.setViewControllers(items, animated: false)
             self.logNavigationStack(label: "views in stack now:")
         }
         
@@ -169,20 +170,28 @@ fileprivate extension IndexDetailViewController {
         indexDetailChannel.debug("becoming uncollapsed")
         logNavigationStack(label: "views in stack were:")
         
-        func addIndexViewToStack() {
-            indexController.view.removeFromSuperview()
-            indexController.removeFromParent()
-            stackView.insertArrangedSubview(indexController.view, at: 0)
-            addChild(indexController)
-            logNavigationStack(label: "views in stack now:")
-        }
-        
         var items = detailNavigation.viewControllers
         items.remove(at: 0)
         items.insert(detailRootController, at: 0)
-        detailNavigation.setViewControllers(items, animated: true) {
-            addIndexViewToStack()
-        }
+        detailNavigation.setViewControllers(items, animated: false)
+        indexController.view.isHidden = true
+        indexController.view.removeFromSuperview()
+        indexController.removeFromParent()
+        stackView.insertArrangedSubview(indexController.view, at: 0)
+        addChild(indexController)
+
+        UIView.animate(withDuration: 0.5,
+                       animations: {
+                            self.indexController.view.isHidden = false
+                            self.detailNavigation.isNavigationBarHidden = items.count == 1
+                        },
+                       completion: { finished in
+                        if finished {
+                            self.detailNavigation.isNavigationBarHidden = items.count == 1
+                            self.logNavigationStack(label: "views in stack now:")
+                        }
+        })
+
     }
     
     func logNavigationStack(label: String) {
@@ -196,6 +205,7 @@ extension IndexDetailViewController: UINavigationControllerDelegate {
     
     public func navigationController(_ navigationController: UINavigationController, willShow viewController: UIViewController, animated: Bool) {
         indexDetailChannel.debug("showing \(viewController.title ?? String(describing: viewController))")
+        detailNavigation.isNavigationBarHidden = navigationController.viewControllers.firstIndex(of: viewController) == 0
     }
     
     public func navigationController(_ navigationController: UINavigationController, didShow viewController: UIViewController, animated: Bool) {

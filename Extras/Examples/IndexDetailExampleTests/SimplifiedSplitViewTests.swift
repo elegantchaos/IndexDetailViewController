@@ -7,7 +7,7 @@
 //
 
 import XCTest
-@testable import SimplifiedSplitView
+@testable import IndexDetailExample
 
 class SimplifiedSplitViewTests: XCTestCase {
 

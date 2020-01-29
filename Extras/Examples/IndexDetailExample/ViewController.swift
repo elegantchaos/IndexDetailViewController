@@ -9,7 +9,9 @@ import IndexDetailViewController
 class ViewController: UIViewController {
     var indexDetailViewController: IndexDetailViewController!
     @IBOutlet weak var contentStack: UIStackView!
-    
+    @IBOutlet weak var toggleCollapsedButton: UIButton!
+    @IBOutlet weak var toggleDirectionButton: UIButton!
+
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -28,14 +30,35 @@ class ViewController: UIViewController {
         indexDetailViewController.detailRootController = detailView
 
         contentStack.insertArrangedSubview(indexDetailViewController.view, at: 2)
+        updateToggleCollapsedIcon()
+        updateToggleDirectionIcon()
+    }
+    
+    func updateToggleCollapsedIcon() {
+        let name: String
+        if indexDetailViewController.direction == .vertical {
+            name = indexDetailViewController.isCollapsed ? "arrow.down.square" : "arrow.up.square"
+        } else {
+            name = indexDetailViewController.isCollapsed ? "arrow.right.square" : "arrow.left.square"
+        }
+        
+        toggleCollapsedButton.setImage(UIImage(systemName: name), for: .normal)
+    }
+
+    func updateToggleDirectionIcon() {
+        let name = indexDetailViewController.direction == .vertical ? "square.split.1x2" : "square.split.2x1"
+        toggleDirectionButton.setImage(UIImage(systemName: name), for: .normal)
     }
     
     @IBAction func toggleCollapsed(_ sender: Any) {
         indexDetailViewController.isCollapsed = !indexDetailViewController.isCollapsed
+        updateToggleCollapsedIcon()
     }
     
     @IBAction func toggleDirection(_ sender: Any) {
         indexDetailViewController.direction = indexDetailViewController.direction == .horizontal ? .vertical : .horizontal
+        updateToggleDirectionIcon()
+        updateToggleCollapsedIcon()
     }
 }
 

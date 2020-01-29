@@ -1,10 +1,7 @@
-//
-//  SimplifiedSplitViewTests.swift
-//  SimplifiedSplitViewTests
-//
-//  Created by Developer on 28/01/2020.
-//  Copyright © 2020 Elegant Chaos. All rights reserved.
-//
+// -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+//  Created by Sam Deane on 29/01/20.
+//  All code (c) 2020 - present day, Elegant Chaos Limited.
+// -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
 import XCTest
 @testable import IndexDetailExample

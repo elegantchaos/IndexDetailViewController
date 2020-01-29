@@ -10,7 +10,7 @@
         <!--View Controller-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController id="BYZ-38-t0r" customClass="ViewController" customModule="SimplifiedSplitView" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="BYZ-38-t0r" customClass="ViewController" customModule="IndexDetailExample" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -21,16 +21,16 @@
                                     <stackView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="252" verticalCompressionResistancePriority="752" distribution="fillEqually" translatesAutoresizingMaskIntoConstraints="NO" id="Adl-Zs-itL">
                                         <rect key="frame" x="0.0" y="0.0" width="375" height="35.666666666666664"/>
                                         <subviews>
-                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Pd4-DS-pKA">
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Pd4-DS-pKA">
                                                 <rect key="frame" x="0.0" y="0.0" width="187.66666666666666" height="35.666666666666664"/>
-                                                <state key="normal" title="Toggle Collapsed"/>
+                                                <state key="normal" image="arrow.left.square" catalog="system"/>
                                                 <connections>
                                                     <action selector="toggleCollapsed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="VwC-Sl-ava"/>
                                                 </connections>
                                             </button>
-                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ws1-mn-E0E">
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ws1-mn-E0E">
                                                 <rect key="frame" x="187.66666666666663" y="0.0" width="187.33333333333337" height="35.666666666666664"/>
-                                                <state key="normal" title="Toggle Direction"/>
+                                                <state key="normal" image="square.split.2x1" catalog="system"/>
                                                 <connections>
                                                     <action selector="toggleDirection:" destination="BYZ-38-t0r" eventType="touchUpInside" id="g3d-aa-rti"/>
                                                 </connections>
@@ -41,7 +41,7 @@
                                         </constraints>
                                     </stackView>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Header" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="0sc-qN-0xe">
-                                        <rect key="frame" x="0.0" y="34" width="375" height="20.333333333333329"/>
+                                        <rect key="frame" x="0.0" y="26" width="375" height="20.333333333333329"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <color key="backgroundColor" systemColor="systemGreenColor" red="0.20392156859999999" green="0.78039215689999997" blue="0.34901960780000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
@@ -52,7 +52,7 @@
                                         <rect key="frame" x="0.0" y="64" width="375" height="670"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Footer" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="480-nn-5by">
-                                                <rect key="frame" x="20" y="20" width="335" height="630"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="375" height="670"/>
                                                 <color key="backgroundColor" systemColor="systemGreenColor" red="0.20392156859999999" green="0.78039215689999997" blue="0.34901960780000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                 <nil key="textColor"/>
@@ -61,10 +61,10 @@
                                         </subviews>
                                         <color key="backgroundColor" systemColor="systemGrayColor" red="0.5568627451" green="0.5568627451" blue="0.57647058819999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <constraints>
-                                            <constraint firstItem="480-nn-5by" firstAttribute="leading" secondItem="VPG-sn-Efm" secondAttribute="leading" constant="20" symbolic="YES" id="0eS-Yc-vbZ"/>
-                                            <constraint firstAttribute="bottom" secondItem="480-nn-5by" secondAttribute="bottom" constant="20" symbolic="YES" id="LcC-dP-vf3"/>
-                                            <constraint firstAttribute="trailing" secondItem="480-nn-5by" secondAttribute="trailing" constant="20" symbolic="YES" id="XhI-89-OIh"/>
-                                            <constraint firstItem="480-nn-5by" firstAttribute="top" secondItem="VPG-sn-Efm" secondAttribute="top" priority="750" constant="20" symbolic="YES" id="rcS-7x-Udu"/>
+                                            <constraint firstItem="480-nn-5by" firstAttribute="leading" secondItem="VPG-sn-Efm" secondAttribute="leading" id="0eS-Yc-vbZ"/>
+                                            <constraint firstAttribute="bottom" secondItem="480-nn-5by" secondAttribute="bottom" id="LcC-dP-vf3"/>
+                                            <constraint firstAttribute="trailing" secondItem="480-nn-5by" secondAttribute="trailing" id="XhI-89-OIh"/>
+                                            <constraint firstItem="480-nn-5by" firstAttribute="top" secondItem="VPG-sn-Efm" secondAttribute="top" priority="750" id="rcS-7x-Udu"/>
                                         </constraints>
                                     </view>
                                 </subviews>
@@ -81,6 +81,8 @@
                     </view>
                     <connections>
                         <outlet property="contentStack" destination="efb-kt-EQw" id="egi-LU-sHb"/>
+                        <outlet property="toggleCollapsedButton" destination="Pd4-DS-pKA" id="vbz-wU-RPK"/>
+                        <outlet property="toggleDirectionButton" destination="Ws1-mn-E0E" id="prh-4g-mep"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
@@ -90,7 +92,7 @@
         <!--Example Detail View Controller-->
         <scene sceneID="jy0-Xa-f7O">
             <objects>
-                <viewController storyboardIdentifier="Detail" id="v6p-bi-HhV" customClass="ExampleDetailViewController" customModule="SimplifiedSplitView" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="Detail" id="v6p-bi-HhV" customClass="ExampleDetailViewController" customModule="IndexDetailExample" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="yjA-O8-SiA" customClass="Ex">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -118,19 +120,19 @@
         <!--Example Index View Controller-->
         <scene sceneID="gEZ-El-2mP">
             <objects>
-                <viewController storyboardIdentifier="Index" id="MUh-Dg-M6w" customClass="ExampleIndexViewController" customModule="SimplifiedSplitView" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="d8i-cO-Lkj">
+                <viewController storyboardIdentifier="Index" id="MUh-Dg-M6w" customClass="ExampleIndexViewController" customModule="IndexDetailExample" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="d8i-cO-Lkj">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xl6-0b-gqq">
+                            <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="249" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xl6-0b-gqq">
                                 <rect key="frame" x="20" y="64" width="335" height="30"/>
                                 <state key="normal" title="Push Detail"/>
                                 <connections>
                                     <action selector="addDetail:" destination="MUh-Dg-M6w" eventType="touchUpInside" id="z9f-Um-WTi"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="nrJ-c3-Chv">
+                            <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="249" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="nrJ-c3-Chv">
                                 <rect key="frame" x="20" y="114" width="335" height="30"/>
                                 <state key="normal" title="Show Detail"/>
                                 <connections>
@@ -156,4 +158,8 @@
             <point key="canvasLocation" x="78" y="45"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="arrow.left.square" catalog="system" width="64" height="56"/>
+        <image name="square.split.2x1" catalog="system" width="64" height="56"/>
+    </resources>
 </document>

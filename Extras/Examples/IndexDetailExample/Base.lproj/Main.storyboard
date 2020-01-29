@@ -40,10 +40,10 @@
                                             <constraint firstAttribute="height" constant="60" id="pQ9-OC-R4K"/>
                                         </constraints>
                                     </stackView>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Header" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="0sc-qN-0xe">
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="index detail view is below this line" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="0sc-qN-0xe">
                                         <rect key="frame" x="0.0" y="26" width="375" height="20.333333333333329"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <color key="backgroundColor" systemColor="systemGreenColor" red="0.20392156859999999" green="0.78039215689999997" blue="0.34901960780000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <color key="backgroundColor" systemColor="systemGroupedBackgroundColor" red="0.94901960780000005" green="0.94901960780000005" blue="0.96862745100000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
@@ -51,9 +51,9 @@
                                     <view contentMode="scaleToFill" verticalHuggingPriority="252" translatesAutoresizingMaskIntoConstraints="NO" id="VPG-sn-Efm">
                                         <rect key="frame" x="0.0" y="64" width="375" height="670"/>
                                         <subviews>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Footer" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="480-nn-5by">
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="index detail view is above this line" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="480-nn-5by">
                                                 <rect key="frame" x="0.0" y="0.0" width="375" height="670"/>
-                                                <color key="backgroundColor" systemColor="systemGreenColor" red="0.20392156859999999" green="0.78039215689999997" blue="0.34901960780000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                <color key="backgroundColor" systemColor="systemGroupedBackgroundColor" red="0.94901960780000005" green="0.94901960780000005" blue="0.96862745100000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                 <nil key="textColor"/>
                                                 <nil key="highlightedColor"/>
@@ -117,23 +117,51 @@
             </objects>
             <point key="canvasLocation" x="804" y="44"/>
         </scene>
+        <!--Example Detail Root View Controller-->
+        <scene sceneID="Jm5-9s-Y3L">
+            <objects>
+                <viewController storyboardIdentifier="Root" id="dQi-Bv-8tC" customClass="ExampleDetailRootViewController" customModule="IndexDetailExample" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="dLK-bC-fHL">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qYG-Dk-lmI">
+                                <rect key="frame" x="47" y="385.66666666666669" width="281" height="40.666666666666686"/>
+                                <string key="text">Detail Root View
+Shown When Nothing Else Is Pushed</string>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <constraints>
+                            <constraint firstItem="qYG-Dk-lmI" firstAttribute="centerY" secondItem="dLK-bC-fHL" secondAttribute="centerY" id="Ax1-Uq-pGH"/>
+                            <constraint firstItem="qYG-Dk-lmI" firstAttribute="centerX" secondItem="dLK-bC-fHL" secondAttribute="centerX" id="JVf-Ag-VbL"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="VaR-1n-kII"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="RR2-qY-6hn" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1490" y="44"/>
+        </scene>
         <!--Example Index View Controller-->
         <scene sceneID="gEZ-El-2mP">
             <objects>
                 <viewController storyboardIdentifier="Index" id="MUh-Dg-M6w" customClass="ExampleIndexViewController" customModule="IndexDetailExample" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="d8i-cO-Lkj">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="249" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xl6-0b-gqq">
-                                <rect key="frame" x="20" y="64" width="335" height="30"/>
+                                <rect key="frame" x="148.66666666666666" y="64" width="78" height="30"/>
                                 <state key="normal" title="Push Detail"/>
                                 <connections>
                                     <action selector="addDetail:" destination="MUh-Dg-M6w" eventType="touchUpInside" id="z9f-Um-WTi"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="249" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="nrJ-c3-Chv">
-                                <rect key="frame" x="20" y="114" width="335" height="30"/>
+                                <rect key="frame" x="147" y="114" width="81" height="30"/>
                                 <state key="normal" title="Show Detail"/>
                                 <connections>
                                     <action selector="showDetail:" destination="MUh-Dg-M6w" eventType="touchUpInside" id="D2O-sd-XW6"/>
@@ -143,12 +171,10 @@
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <constraints>
                             <constraint firstItem="lp2-UY-fz8" firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="nrJ-c3-Chv" secondAttribute="bottom" constant="20" id="Oqt-kZ-yjS"/>
-                            <constraint firstItem="xl6-0b-gqq" firstAttribute="leading" secondItem="lp2-UY-fz8" secondAttribute="leading" constant="20" id="aib-Wx-DQS"/>
                             <constraint firstItem="nrJ-c3-Chv" firstAttribute="top" secondItem="xl6-0b-gqq" secondAttribute="bottom" constant="20" id="cpc-sh-d5v"/>
-                            <constraint firstItem="nrJ-c3-Chv" firstAttribute="leading" secondItem="lp2-UY-fz8" secondAttribute="leading" constant="20" id="dB5-W3-v4v"/>
                             <constraint firstItem="xl6-0b-gqq" firstAttribute="top" secondItem="lp2-UY-fz8" secondAttribute="top" constant="20" id="e8n-Na-9LU"/>
-                            <constraint firstItem="lp2-UY-fz8" firstAttribute="trailing" secondItem="nrJ-c3-Chv" secondAttribute="trailing" constant="20" id="oW2-Aa-Gn4"/>
-                            <constraint firstItem="lp2-UY-fz8" firstAttribute="trailing" secondItem="xl6-0b-gqq" secondAttribute="trailing" constant="20" id="qlm-m2-JUO"/>
+                            <constraint firstItem="xl6-0b-gqq" firstAttribute="centerX" secondItem="d8i-cO-Lkj" secondAttribute="centerX" id="oQf-Qb-ckk"/>
+                            <constraint firstItem="nrJ-c3-Chv" firstAttribute="centerX" secondItem="d8i-cO-Lkj" secondAttribute="centerX" id="tpW-HJ-QSM"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="lp2-UY-fz8"/>
                     </view>

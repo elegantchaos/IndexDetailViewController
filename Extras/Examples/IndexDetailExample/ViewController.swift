@@ -22,12 +22,8 @@ class ViewController: UIViewController {
         indexView.indexDetailViewController = indexDetailViewController
         indexDetailViewController.indexController = indexView
 
-        let detailLabel = UILabel()
-        detailLabel.text = "detail root"
-        let detailView = UIViewController()
-        detailView.view = detailLabel
-        detailView.title = "detail root"
-        indexDetailViewController.detailRootController = detailView
+        let detailRootView = storyboard?.instantiateViewController(identifier: "Root") as! ExampleDetailRootViewController
+        indexDetailViewController.detailRootController = detailRootView
 
         contentStack.insertArrangedSubview(indexDetailViewController.view, at: 2)
         updateToggleCollapsedIcon()
@@ -87,4 +83,8 @@ class ExampleDetailViewController: UIViewController {
         detailView.indexDetailViewController = indexDetailViewController
         indexDetailViewController.pushDetail(detailView)
     }
+}
+
+class ExampleDetailRootViewController: UIViewController {
+    
 }

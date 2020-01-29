@@ -58,7 +58,7 @@ class ViewController: UIViewController {
     }
 }
 
-class ExampleIndexViewController: UIViewController {
+class ExampleIndexViewController: UITableViewController {
     var indexDetailViewController: IndexDetailViewController!
     
     override func viewDidLayoutSubviews() {
@@ -78,6 +78,22 @@ class ExampleIndexViewController: UIViewController {
         detailView.indexDetailViewController = indexDetailViewController
         indexDetailViewController.showDetail(detailView)
 
+    }
+    
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return 20
+    }
+    
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "cell")!
+        cell.textLabel?.text = "Item \(indexPath.row)"
+        return cell
+    }
+    
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let detailView = storyboard?.instantiateViewController(identifier: "Detail") as! ExampleDetailViewController
+        detailView.indexDetailViewController = indexDetailViewController
+        indexDetailViewController.showDetail(detailView)
     }
 }
 

@@ -138,31 +138,17 @@ fileprivate extension IndexDetailViewController {
         }
 
         func updateNavigation() {
-            print("indexController parent is \(indexController.parent)")
             // remove index view from the stack
-            print("indexController view superview is \(indexController.view.superview)")
             stackView.removeArrangedSubview(indexView)
-            print("indexController view superview is \(indexController.view.superview)")
             indexController.removeFromParent()
             indexView.removeFromSuperview()
-            print("indexController view superview is \(indexController.view.superview)")
-            print("indexController parent is \(indexController.parent)")
+            indexView.isHidden = false
 
             // insert the index view into the navigation stack
             var items = detailNavigation.viewControllers
             items.insert(indexController, at: 1)
-            indexView.isHidden = false
             detailView.isHidden = false
             detailNavigation.setViewControllers(items, animated: false)
-            DispatchQueue.main.async {
-                print("indexController view superview is \(self.indexController.view.superview)")
-                print("indexController parent is \(self.indexController.parent)")
-//                indexView.frame = detailView.frame
-//                indexView.setNeedsLayout()
-//                indexView.setNeedsUpdateConstraints()
-                print("indexView is \(indexView)")
-                print(indexView.constraints)
-            }
             self.logNavigationStack(label: "views in stack now:")
         }
         
@@ -183,19 +169,15 @@ fileprivate extension IndexDetailViewController {
         indexDetailChannel.debug("becoming uncollapsed")
         logNavigationStack(label: "views in stack were:")
         
-        print("indexController parent is \(indexController.parent)")
-
         // remove the index view from the navigation stack
         var items = detailNavigation.viewControllers
         items.remove(at: 1)
         detailNavigation.setViewControllers(items, animated: false)
         indexController.view.isHidden = true
-        print("indexController view superview is \(indexController.view.superview)")
         indexController.view.removeFromSuperview()
         indexController.removeFromParent()
         stackView.insertArrangedSubview(indexController.view, at: 0)
         addChild(indexController)
-        print("indexController parent is \(indexController.parent)")
 
         UIView.animate(withDuration: 0.5,
                        animations: {

@@ -41,6 +41,8 @@ public class IndexDetailViewController: UIViewController {
         }
     }
     
+    var forceIndexSize = true
+    
     /// A controller to use for the index view.
     /// Needs to be set by the time viewDidLoad is called on this controller.
     public var indexController: UIViewController!
@@ -53,7 +55,7 @@ public class IndexDetailViewController: UIViewController {
     
     fileprivate var detailNavigation: UINavigationController!
     fileprivate var stackView: UIStackView!
-    
+//    fileprivate var indexConstraints: [NSLayoutConstraint] = []
     
     // MARK: Public API
     
@@ -109,10 +111,14 @@ fileprivate extension IndexDetailViewController {
     func updateCollapsedStateForTraits() {
         switch direction {
             case .vertical:
-                isCollapsed = traitCollection.verticalSizeClass == .compact
+                if traitCollection.verticalSizeClass == .compact {
+                    isCollapsed = true
+            }
             
             case .horizontal:
-                isCollapsed = traitCollection.horizontalSizeClass == .compact
+                if traitCollection.horizontalSizeClass == .compact {
+                    isCollapsed = true
+            }
             
             default:
                 break
@@ -138,6 +144,8 @@ fileprivate extension IndexDetailViewController {
         }
 
         func updateNavigation() {
+            detailView.isHidden = false
+
             // remove index view from the stack
             stackView.removeArrangedSubview(indexView)
             indexController.removeFromParent()
@@ -147,22 +155,12 @@ fileprivate extension IndexDetailViewController {
             // insert the index view into the navigation stack
             var items = detailNavigation.viewControllers
             items.insert(indexController, at: 1)
-            detailView.isHidden = false
             detailNavigation.setViewControllers(items, animated: false)
+
             self.logNavigationStack(label: "views in stack now:")
         }
         
-        UIView.animate(withDuration: 0.5,
-                       animations: {
-                        hideIndexViewTemporarily()
-                        },
-                       completion: { finished in
-                        if finished {
-                            updateNavigation()
-                        }
-        })
-            
-
+        UIView.animate(withDuration: 0.5, animations: { hideIndexViewTemporarily() }, completion: { _ in updateNavigation() })
     }
     
     func transitionFromCollapsed() {
@@ -184,11 +182,9 @@ fileprivate extension IndexDetailViewController {
                             self.indexController.view.isHidden = false
                             self.detailNavigation.isNavigationBarHidden = items.count == 1
                         },
-                       completion: { finished in
-                        if finished {
+                       completion: { _ in
                             self.detailNavigation.isNavigationBarHidden = items.count == 1
                             self.logNavigationStack(label: "views in stack now:")
-                        }
         })
 
     }
@@ -203,6 +199,19 @@ fileprivate extension IndexDetailViewController {
 extension IndexDetailViewController: UINavigationControllerDelegate {
     public func navigationController(_ navigationController: UINavigationController, willShow viewController: UIViewController, animated: Bool) {
         indexDetailChannel.debug("showing \(viewController.title ?? String(describing: viewController))")
-        detailNavigation.isNavigationBarHidden = (viewController === indexController) || (viewController === detailRootController)
+        
+        let showingIndex = viewController === indexController
+        let showingRoot = viewController === detailRootController
+        detailNavigation.isNavigationBarHidden = showingIndex || showingRoot
+    }
+    
+    public func navigationController(_ navigationController: UINavigationController, didShow viewController: UIViewController, animated: Bool) {
+        if forceIndexSize {
+            let showingIndex = viewController === indexController
+            if showingIndex, let indexView = indexController.view, let detailView = detailNavigation.view {
+                indexView.heightAnchor.constraint(equalTo: detailView.heightAnchor).isActive = true
+                indexView.widthAnchor.constraint(equalTo: detailView.widthAnchor).isActive = true
+            }
+        }
     }
 }

@@ -65,6 +65,7 @@ class ExampleIndexViewController: UITableViewController {
         super.viewDidLayoutSubviews()
         print(view.frame)
         print(view.bounds)
+        print(view.constraints)
     }
     
     @IBAction func addDetail(_ sender: Any) {

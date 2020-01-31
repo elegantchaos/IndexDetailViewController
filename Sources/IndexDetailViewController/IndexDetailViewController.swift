@@ -128,77 +128,79 @@ fileprivate extension IndexDetailViewController {
     
     func transitionToCollapsed() {
         indexDetailChannel.debug("becoming collapsed")
-        logNavigationStack(label: "views in stack were:")
 
-        let indexView = indexController.view!
-        let detailView = detailNavigation.view!
-        
-        func hideIndexViewTemporarily() {
-            // hide the index view or the navagation view
-            // we animate this, so that the stack view transitions smoothly from two to one view
-            if detailNavigation.viewControllers.count == 1 {
-                detailView.isHidden = true
-                detailNavigation.isNavigationBarHidden = true
-            } else {
-                indexView.isHidden = true
+        if let indexView = indexController.view, let detailView = detailNavigation.view {
+            
+            func hideIndexViewTemporarily() {
+                // hide the index view or the navagation view
+                // we animate this, so that the stack view transitions smoothly from two to one view
+                if detailNavigation.viewControllers.count == 1 {
+                    detailView.isHidden = true
+                    detailNavigation.isNavigationBarHidden = true
+                } else {
+                    indexView.isHidden = true
+                }
             }
+            
+            func updateNavigation() {
+                detailView.isHidden = false
+                
+                // remove index view from the stack
+                stackView.removeArrangedSubview(indexView)
+                indexController.removeFromParent()
+                indexView.removeFromSuperview()
+                indexView.isHidden = false
+                
+                // insert the index view into the navigation stack
+                let enclosing = UIViewController()
+                enclosing.addChild(indexController)
+                enclosing.view.addSubview(indexView)
+                indexView.stickTo(view:enclosing.view)
+                var items = detailNavigation.viewControllers
+                items.insert(enclosing, at: 1)
+                indexContainer = enclosing
+                detailNavigation.setViewControllers(items, animated: false)
+            }
+            
+            UIView.animate(withDuration: animationDuration, animations: { hideIndexViewTemporarily() }, completion: { _ in updateNavigation() })
         }
-
-        func updateNavigation() {
-            detailView.isHidden = false
-
-            // remove index view from the stack
-            stackView.removeArrangedSubview(indexView)
-            indexController.removeFromParent()
-            indexView.removeFromSuperview()
-            indexView.isHidden = false
-
-            // insert the index view into the navigation stack
-            let enclosing = UIViewController()
-            enclosing.addChild(indexController)
-            enclosing.view.addSubview(indexView)
-            indexView.stickTo(view:enclosing.view)
-            var items = detailNavigation.viewControllers
-            items.insert(enclosing, at: 1)
-            indexContainer = enclosing
-            detailNavigation.setViewControllers(items, animated: false)
-
-            self.logNavigationStack(label: "views in stack now:")
-        }
-        
-        UIView.animate(withDuration: animationDuration, animations: { hideIndexViewTemporarily() }, completion: { _ in updateNavigation() })
     }
     
     func transitionFromCollapsed() {
         indexDetailChannel.debug("becoming uncollapsed")
-        logNavigationStack(label: "views in stack were:")
         
-        // remove the index view from the navigation stack
-        var items = detailNavigation.viewControllers
-        items.remove(at: 1)
-        detailNavigation.setViewControllers(items, animated: false)
-        if items.count == 1 {
-            detailNavigation.view.isHidden = true
-        } else {
-            indexController.view.isHidden = true
-        }
-        indexController.view.removeFromSuperview()
-        indexController.removeFromParent()
-        stackView.insertArrangedSubview(indexController.view, at: 0)
-        addChild(indexController)
-        indexContainer = nil
-        
-        UIView.animate(withDuration: animationDuration,
-                       animations: {
-                            self.indexController.view.isHidden = false
-                            self.detailNavigation.view.isHidden = false
-                            self.detailNavigation.isNavigationBarHidden = items.count == 1
-                        },
-                       completion: { _ in
-//                            self.detailNavigation.isNavigationBarHidden = items.count == 1
-                            self.logNavigationStack(label: "views in stack now:")
-        })
+        if let indexView = indexController.view, let detailView = detailNavigation.view {
+            var items = detailNavigation.viewControllers
 
+            func updateRootStack() {
+                // remove the index view from the navigation stack
+                items.remove(at: 1)
+                indexView.removeFromSuperview()
+                indexController.removeFromParent()
+                stackView.insertArrangedSubview(indexView, at: 0)
+                addChild(indexController)
+                indexContainer = nil
+                
+                // start with either the index or the navigation view hidden
+                // we will animate one of them back to visibility, to generate a slide animation in the right direction
+                detailNavigation.setViewControllers(items, animated: false)
+                if items.count == 1 {
+                    detailView.isHidden = true
+                } else {
+                    indexView.isHidden = true
+                }
+            }
+
+            func reshowViews() {
+                // show whichever view was hidden, so that it animates into place
+                indexView.isHidden = false
+                detailView.isHidden = false
+                detailNavigation.isNavigationBarHidden = items.count == 1
+            }
+
+            updateRootStack()
+            UIView.animate(withDuration: animationDuration, animations: { reshowViews() })
+        }
     }
     
     func logNavigationStack(label: String) {

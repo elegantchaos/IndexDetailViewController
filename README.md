@@ -53,10 +53,18 @@ Other configuration options that can be set in code are the initial collapsed st
 
 ### Appearance
 
-The controller adds no chrome of its own.
+The controller adds no chrome of its own, and does not supply buttons to toggle the collapsed state.
 
-In particular, no visual divider is added between the two panels. 
-
-For now, if you want a divider, you can include it as part of the view managed by the index controller, and make that controller hide it when the overall controller is in collapsed mode.
+No visual divider is added between the two panels. For now, if you want a divider, you can include it as part of the view managed by the index controller, and make that controller hide it when the overall controller is in collapsed mode.
 
 I may add the option to have the controller itself manage a divider view, but I was aiming for the simplest implementation possible.
+
+## Example
+
+A simple example app is included in `Extras/Examples`. 
+
+It illustrates:
+- how to create buttons which collapse the view and change its orientation
+- how to create an index view which selects a detail view
+- how to push additional views from a detail view
+

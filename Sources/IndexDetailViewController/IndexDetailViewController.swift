@@ -5,7 +5,7 @@
 
 import UIKit
 import Logger
-import ViewExtensions
+import LayoutExtensions
 
 let indexDetailChannel = Channel("com.elegantchaos.IndexDetail")
 
@@ -55,6 +55,8 @@ public class IndexDetailViewController: UIViewController {
     
     fileprivate var detailNavigation: UINavigationController!
     fileprivate var stackView: UIStackView!
+    fileprivate var indexContainer: UIViewController?
+    
 //    fileprivate var indexConstraints: [NSLayoutConstraint] = []
     
     // MARK: Public API
@@ -153,8 +155,13 @@ fileprivate extension IndexDetailViewController {
             indexView.isHidden = false
 
             // insert the index view into the navigation stack
+            let enclosing = UIViewController()
+            enclosing.addChild(indexController)
+            enclosing.view.addSubview(indexView)
+            indexView.stickTo(view:enclosing.view)
             var items = detailNavigation.viewControllers
-            items.insert(indexController, at: 1)
+            items.insert(enclosing, at: 1)
+            indexContainer = enclosing
             detailNavigation.setViewControllers(items, animated: false)
 
             self.logNavigationStack(label: "views in stack now:")
@@ -176,7 +183,8 @@ fileprivate extension IndexDetailViewController {
         indexController.removeFromParent()
         stackView.insertArrangedSubview(indexController.view, at: 0)
         addChild(indexController)
-
+        indexContainer = nil
+        
         UIView.animate(withDuration: 0.5,
                        animations: {
                             self.indexController.view.isHidden = false
@@ -200,18 +208,18 @@ extension IndexDetailViewController: UINavigationControllerDelegate {
     public func navigationController(_ navigationController: UINavigationController, willShow viewController: UIViewController, animated: Bool) {
         indexDetailChannel.debug("showing \(viewController.title ?? String(describing: viewController))")
         
-        let showingIndex = viewController === indexController
+        let showingIndex = viewController === indexContainer
         let showingRoot = viewController === detailRootController
         detailNavigation.isNavigationBarHidden = showingIndex || showingRoot
     }
     
     public func navigationController(_ navigationController: UINavigationController, didShow viewController: UIViewController, animated: Bool) {
-        if forceIndexSize {
-            let showingIndex = viewController === indexController
-            if showingIndex, let indexView = indexController.view, let detailView = detailNavigation.view {
-                indexView.heightAnchor.constraint(equalTo: detailView.heightAnchor).isActive = true
-                indexView.widthAnchor.constraint(equalTo: detailView.widthAnchor).isActive = true
-            }
-        }
+//        if forceIndexSize {
+//            let showingIndex = viewController === indexController
+//            if showingIndex, let indexView = indexController.view, let detailView = detailNavigation.view {
+//                indexView.heightAnchor.constraint(equalTo: detailView.heightAnchor).isActive = true
+//                indexView.widthAnchor.constraint(equalTo: detailView.widthAnchor).isActive = true
+//            }
+//        }
     }
 }

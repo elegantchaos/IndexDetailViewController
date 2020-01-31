@@ -11,19 +11,26 @@ class ViewController: UIViewController {
     @IBOutlet weak var contentStack: UIStackView!
     @IBOutlet weak var toggleCollapsedButton: UIButton!
     @IBOutlet weak var toggleDirectionButton: UIButton!
-
+    @IBOutlet weak var startCollapsedSwitch: UISwitch!
+    
+    var startCollapsed = false
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        indexDetailViewController = IndexDetailViewController()
-        addChild(indexDetailViewController)
+        startCollapsed = UserDefaults.standard.bool(forKey: "StartCollapsed")
+        startCollapsedSwitch.setOn(startCollapsed, animated: false)
+
         
         let indexView = storyboard?.instantiateViewController(identifier: "Index") as! ExampleIndexViewController
-        indexView.indexDetailViewController = indexDetailViewController
-        indexDetailViewController.indexController = indexView
-
         let detailRootView = storyboard?.instantiateViewController(identifier: "Root") as! ExampleDetailRootViewController
+
+        indexDetailViewController = IndexDetailViewController()
+        addChild(indexDetailViewController)
+        indexDetailViewController.indexController = indexView
         indexDetailViewController.detailRootController = detailRootView
+        indexDetailViewController.isCollapsed = startCollapsed
+        indexView.indexDetailViewController = indexDetailViewController
 
         contentStack.insertArrangedSubview(indexDetailViewController.view, at: 2)
         updateToggleCollapsedIcon()
@@ -44,6 +51,11 @@ class ViewController: UIViewController {
     func updateToggleDirectionIcon() {
         let name = indexDetailViewController.direction == .vertical ? "square.split.1x2" : "square.split.2x1"
         toggleDirectionButton.setImage(UIImage(systemName: name), for: .normal)
+    }
+    
+    @IBAction func toggleStartCollapsed(_ sender: Any) {
+        startCollapsed = !startCollapsed
+        UserDefaults.standard.set(startCollapsed, forKey: "StartCollapsed")
     }
     
     @IBAction func toggleCollapsed(_ sender: Any) {

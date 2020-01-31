@@ -19,7 +19,7 @@ public class IndexDetailViewController: UIViewController {
 
     public var isCollapsed = false {
         willSet {
-            if newValue != isCollapsed {
+            if isSetup && (newValue != isCollapsed) {
                 DispatchQueue.main.async {
                     if newValue {
                         self.transitionToCollapsed()
@@ -54,6 +54,7 @@ public class IndexDetailViewController: UIViewController {
     
     // MARK: Internal Properties
     
+    fileprivate var isSetup = false
     fileprivate var detailNavigation: UINavigationController!
     fileprivate var stackView: UIStackView!
     fileprivate var indexContainer: UIViewController?
@@ -75,23 +76,34 @@ public class IndexDetailViewController: UIViewController {
 
 public extension IndexDetailViewController {
     override func viewDidLoad() {
-        addChild(indexController)
-
-        detailNavigation = UINavigationController(rootViewController: detailRootController)
-        detailNavigation.delegate = self
-        addChild(detailNavigation)
-
+        // our root view is a stack which will contain the other views
         stackView = UIStackView()
         stackView.alignment = .fill
         stackView.distribution = .fillEqually
         stackView.axis = .horizontal
         view = stackView
-        
-        stackView.addArrangedSubview(indexController.view)
-        addChild(indexController)
 
+        // when the index is pushed onto the stack, we want it to appear to be the root
+        // so we don't want to be able to go back from it to the actual detail root
         indexController.navigationItem.hidesBackButton = true
+
+        // we create and control the detail navigation controller
+        detailNavigation = UINavigationController(rootViewController: detailRootController)
+        detailNavigation.delegate = self
+        addChild(detailNavigation)
+
+        if isCollapsed {
+            // if we're starting collapsed, the index goes onto the navigation stack
+            detailNavigation.pushViewController(indexController, animated: false)
+        } else {
+            // if we're starting un-collapsed, the index goes into the stack
+            stackView.addArrangedSubview(indexController.view)
+            addChild(indexController)
+        }
+
+        // the navigation view is always in the stack
         stackView.addArrangedSubview(detailNavigation.view)
+        isSetup = true
     }
 
     override func viewWillAppear(_ animated: Bool) {

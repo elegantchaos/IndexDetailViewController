@@ -12,17 +12,18 @@ The basic design is for a two-panel view, in a master-detail style, where one pa
 
 I've used the term "index" in preference to "master", as that's the purpose it always serves in my use-cases (ymmv).
 
+### Orientation
+
+The panels can be configured in either left-right or top-bottom orientation. 
+
+This is mostly a consequence of the implementation, which uses a `UIStackView` internally, making it easy to switch axis. Whether the vertical configuration proves to be useful remains to be seen.
+
 ### Panels
 
 The left/top panel is an index. A controller to determine the contents of this panel is supplied by the user. 
 
 The right/bottom panel is a navigation stack. The navigation controller is created automatically, and generally doesn't need external intervention. A controller to determine the contents of the root of this stack is supplied by the user. Other controllers are pushed onto the stack, either by the index, or by other code.
 
-### Orientation
-
-The panels can be configured in either left-right or top-bottom orientation. 
-
-This is mostly a consequence of the implementation, which uses a `UIStackView` internally, making it easy to switch axis. Whether the vertical configuration proves to be useful remains to be seen.
 
 ### Collapsing Behaviour
 
@@ -47,6 +48,8 @@ The index controller is responsible for supplying the view for the index panel. 
 The current detail view is changed with `showDetail`. This is equivalent to clearing the navigation stack then pushing the supplied view controller. It would typically be done in response to the user choosing an item from the index.
 
 Additional items can be add onto the detail stack with `pushDetail`. This is equivalent to pushing the supplied view controller. It would typically be done in response to the user tapping something on the currently showing detail view.   
+
+Other configuration options that can be set in code are the initial collapsed state, the orientation, and the delay time used by the transition animations.
 
 ### Appearance
 

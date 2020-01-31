@@ -18,15 +18,6 @@
           "revision": "98f39691fffb4ba3f7de021ad507aa872e7ae7df",
           "version": "1.4.0"
         }
-      },
-      {
-        "package": "ViewExtensions",
-        "repositoryURL": "https://github.com/elegantchaos/ViewExtensions.git",
-        "state": {
-          "branch": null,
-          "revision": "8cce15c52b8e2248fb62b68bdbdb4c7d56868ddb",
-          "version": "1.0.3"
-        }
       }
     ]
   },

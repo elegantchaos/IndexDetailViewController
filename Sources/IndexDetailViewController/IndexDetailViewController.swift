@@ -40,9 +40,7 @@ public class IndexDetailViewController: UIViewController {
             stackView.axis = direction
         }
     }
-    
-    var forceIndexSize = true
-    
+        
     /// A controller to use for the index view.
     /// Needs to be set by the time viewDidLoad is called on this controller.
     public var indexController: UIViewController!
@@ -51,14 +49,15 @@ public class IndexDetailViewController: UIViewController {
     /// Needs to be set by the time viewDidLoad is called on this controller.
     public var detailRootController: UIViewController!
 
+    /// Duration to use for the collapse/un-collapse animation.
+    public var animationDuration = 0.6
+    
     // MARK: Internal Properties
     
     fileprivate var detailNavigation: UINavigationController!
     fileprivate var stackView: UIStackView!
     fileprivate var indexContainer: UIViewController?
-    
-//    fileprivate var indexConstraints: [NSLayoutConstraint] = []
-    
+        
     // MARK: Public API
     
     public func showDetail(_ viewController: UIViewController) {
@@ -167,7 +166,7 @@ fileprivate extension IndexDetailViewController {
             self.logNavigationStack(label: "views in stack now:")
         }
         
-        UIView.animate(withDuration: 0.5, animations: { hideIndexViewTemporarily() }, completion: { _ in updateNavigation() })
+        UIView.animate(withDuration: animationDuration, animations: { hideIndexViewTemporarily() }, completion: { _ in updateNavigation() })
     }
     
     func transitionFromCollapsed() {
@@ -178,20 +177,25 @@ fileprivate extension IndexDetailViewController {
         var items = detailNavigation.viewControllers
         items.remove(at: 1)
         detailNavigation.setViewControllers(items, animated: false)
-        indexController.view.isHidden = true
+        if items.count == 1 {
+            detailNavigation.view.isHidden = true
+        } else {
+            indexController.view.isHidden = true
+        }
         indexController.view.removeFromSuperview()
         indexController.removeFromParent()
         stackView.insertArrangedSubview(indexController.view, at: 0)
         addChild(indexController)
         indexContainer = nil
         
-        UIView.animate(withDuration: 0.5,
+        UIView.animate(withDuration: animationDuration,
                        animations: {
                             self.indexController.view.isHidden = false
+                            self.detailNavigation.view.isHidden = false
                             self.detailNavigation.isNavigationBarHidden = items.count == 1
                         },
                        completion: { _ in
-                            self.detailNavigation.isNavigationBarHidden = items.count == 1
+//                            self.detailNavigation.isNavigationBarHidden = items.count == 1
                             self.logNavigationStack(label: "views in stack now:")
         })
 
@@ -211,15 +215,5 @@ extension IndexDetailViewController: UINavigationControllerDelegate {
         let showingIndex = viewController === indexContainer
         let showingRoot = viewController === detailRootController
         detailNavigation.isNavigationBarHidden = showingIndex || showingRoot
-    }
-    
-    public func navigationController(_ navigationController: UINavigationController, didShow viewController: UIViewController, animated: Bool) {
-//        if forceIndexSize {
-//            let showingIndex = viewController === indexController
-//            if showingIndex, let indexView = indexController.view, let detailView = detailNavigation.view {
-//                indexView.heightAnchor.constraint(equalTo: detailView.heightAnchor).isActive = true
-//                indexView.widthAnchor.constraint(equalTo: detailView.widthAnchor).isActive = true
-//            }
-//        }
     }
 }

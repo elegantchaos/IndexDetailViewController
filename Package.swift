@@ -17,7 +17,6 @@ let package = Package(
     dependencies: [
         // Dependencies declare other packages that this package depends on.
          .package(url: "https://github.com/elegantchaos/Logger.git", from: "1.3.6"),
-         .package(url: "https://github.com/elegantchaos/ViewExtensions.git", from: "1.0.3"),
          .package(url: "https://github.com/elegantchaos/LayoutExtensions.git", from: "1.0.3"),
     ],
     targets: [

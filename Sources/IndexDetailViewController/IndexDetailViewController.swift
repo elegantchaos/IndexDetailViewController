@@ -9,9 +9,23 @@ import LayoutExtensions
 
 let indexDetailChannel = Channel("com.elegantchaos.IndexDetail")
 
+public protocol IndexDetailViewControllerDelegate: AnyObject {
+    func indexDetailViewController(_ indexDetailViewController: IndexDetailViewController, changedCollapsedStateTo state: Bool)
+    func indexDetailViewController(_ indexDetailViewController: IndexDetailViewController, willShowView viewController: UIViewController, ofType: IndexDetailViewController.ViewType)
+    func indexDetailViewController(_ indexDetailViewController: IndexDetailViewController, didShowView viewController: UIViewController, ofType: IndexDetailViewController.ViewType)
+}
+
+public extension IndexDetailViewControllerDelegate {
+    func indexDetailViewController(_ indexDetailViewController: IndexDetailViewController, changedCollapsedStateTo state: Bool) { }
+    func indexDetailViewController(_ indexDetailViewController: IndexDetailViewController, willShowView viewController: UIViewController, ofType: IndexDetailViewController.ViewType) { }
+    func indexDetailViewController(_ indexDetailViewController: IndexDetailViewController, didShowView viewController: UIViewController, ofType: IndexDetailViewController.ViewType) { }
+}
+
 public class IndexDetailViewController: UIViewController {
-    
+
     // MARK: Public Properties
+    
+    public weak var delegate: IndexDetailViewControllerDelegate?
     
     /// Indicates whether the view is in collapsed or normal state.
     /// In the collapsed state, the index becomes the root view of the navigation stack.
@@ -27,6 +41,7 @@ public class IndexDetailViewController: UIViewController {
                     } else {
                         self.transitionFromCollapsed()
                     }
+                    self.delegate?.indexDetailViewController(self, changedCollapsedStateTo: newValue)
                 }
             }
         }
@@ -278,11 +293,32 @@ fileprivate extension IndexDetailViewController {
 // MARK: UINavigation Delegate
 
 extension IndexDetailViewController: UINavigationControllerDelegate {
+    public enum ViewType {
+        case index
+        case detail
+        case detailRoot
+    }
+
+    fileprivate func viewType(of viewController: UIViewController) -> ViewType {
+        if viewController === indexWrapper {
+            return .index
+        } else if viewController === detailRootController {
+            return .detailRoot
+        } else {
+            return .detail
+        }
+    }
+    
     public func navigationController(_ navigationController: UINavigationController, willShow viewController: UIViewController, animated: Bool) {
         indexDetailChannel.debug("showing \(viewController.title ?? String(describing: viewController))")
         
-        let showingIndex = viewController === indexWrapper
-        let showingRoot = viewController === detailRootController
-        detailNavigation.isNavigationBarHidden = showingIndex || showingRoot
+        let type = viewType(of: viewController)
+        detailNavigation.isNavigationBarHidden = type != .detail
+        delegate?.indexDetailViewController(self, willShowView: viewController, ofType: type)
+    }
+    
+    public func navigationController(_ navigationController: UINavigationController, didShow viewController: UIViewController, animated: Bool) {
+        let type = viewType(of: viewController)
+        delegate?.indexDetailViewController(self, didShowView: viewController, ofType: type)
     }
 }

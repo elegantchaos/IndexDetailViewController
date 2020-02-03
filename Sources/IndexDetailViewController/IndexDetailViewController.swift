@@ -117,12 +117,12 @@ public extension IndexDetailViewController {
             detailNavigation.pushViewController(wrapper, animated: false)
             indexWrapper = wrapper
         } else {
-            // if we're starting un-collapsed, the index goes into the stack
+            // if we're starting un-collapsed, the index goes into the root stack
             stackView.addArrangedSubview(indexController.view)
             addChild(indexController)
         }
 
-        // the navigation view is always in the stack
+        // the navigation view is always in the root stack
         stackView.addArrangedSubview(detailNavigation.view)
         updateSizeConstraintsForDetail()
         isSetup = true

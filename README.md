@@ -49,7 +49,12 @@ The current detail view is changed with `showDetail`. This is equivalent to clea
 
 Additional items can be add onto the detail stack with `pushDetail`. This is equivalent to pushing the supplied view controller. It would typically be done in response to the user tapping something on the currently showing detail view.   
 
-Other configuration options that can be set in code are the initial collapsed state, the orientation, and the delay time used by the transition animations.
+Other configuration options that can be set in code are:
+
+- the initial collapsed state
+- the orientation
+- the width/height of the detail pane (as a fraction of the overal width/height)
+- the delay time used by the transition animations
 
 ### Appearance
 

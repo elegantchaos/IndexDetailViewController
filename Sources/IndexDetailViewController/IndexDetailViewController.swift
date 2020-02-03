@@ -21,6 +21,7 @@ public class IndexDetailViewController: UIViewController {
         willSet {
             if isSetup && (newValue != isCollapsed) {
                 DispatchQueue.main.async {
+                    self.updateSizeConstraintsForDetail()
                     if newValue {
                         self.transitionToCollapsed()
                     } else {
@@ -38,6 +39,9 @@ public class IndexDetailViewController: UIViewController {
         didSet {
             indexDetailChannel.debug("changed direction to \(direction)")
             stackView.axis = direction
+            if isSetup {
+                updateSizeConstraintsForDetail()
+            }
         }
     }
         
@@ -52,17 +56,27 @@ public class IndexDetailViewController: UIViewController {
     /// Duration to use for the collapse/un-collapse animation.
     public var animationDuration = 0.6
     
+    /// Fractional width/height to use for the detail panel
+    public var detailSizeFraction: CGFloat = 0.66 {
+        didSet {
+            if isSetup {
+                updateSizeConstraintsForDetail()
+            }
+        }
+    }
+    
     // MARK: Internal Properties
     
     fileprivate var isSetup = false
     fileprivate var detailNavigation: UINavigationController!
     fileprivate var stackView: UIStackView!
-    fileprivate var indexContainer: UIViewController?
-        
+    fileprivate var indexWrapper: IndexWrapperViewController?
+    fileprivate var sizeConstraint: NSLayoutConstraint?
+    
     // MARK: Public API
     
     public func showDetail(_ viewController: UIViewController) {
-        let items = isCollapsed ? [detailRootController!, indexController!] : [detailRootController!]
+        let items = isCollapsed ? [detailRootController!, indexWrapper!] : [detailRootController!]
         detailNavigation.setViewControllers(items, animated: false)
         detailNavigation.pushViewController(viewController, animated: isCollapsed)
     }
@@ -83,18 +97,25 @@ public extension IndexDetailViewController {
         stackView.axis = .horizontal
         view = stackView
 
+        // we never want to go back explicitly to the detail root
+        // (the index should be above it in the stack, or visible in the other panel)
+        detailRootController.navigationItem.setHidesBackButton(true, animated: false)
+        
         // when the index is pushed onto the stack, we want it to appear to be the root
         // so we don't want to be able to go back from it to the actual detail root
-        indexController.navigationItem.hidesBackButton = true
+        indexController.navigationItem.setHidesBackButton(true, animated: false)
 
         // we create and control the detail navigation controller
         detailNavigation = UINavigationController(rootViewController: detailRootController)
         detailNavigation.delegate = self
         addChild(detailNavigation)
-
+        
+        updateCollapsedStateForTraits()
         if isCollapsed {
             // if we're starting collapsed, the index goes onto the navigation stack
-            detailNavigation.pushViewController(indexController, animated: false)
+            let wrapper = makeWrapperForIndexController()
+            detailNavigation.pushViewController(wrapper, animated: false)
+            indexWrapper = wrapper
         } else {
             // if we're starting un-collapsed, the index goes into the stack
             stackView.addArrangedSubview(indexController.view)
@@ -103,6 +124,7 @@ public extension IndexDetailViewController {
 
         // the navigation view is always in the stack
         stackView.addArrangedSubview(detailNavigation.view)
+        updateSizeConstraintsForDetail()
         isSetup = true
     }
 
@@ -121,6 +143,15 @@ public extension IndexDetailViewController {
 
 fileprivate extension IndexDetailViewController {
     
+    /// Container view used to wrap the index when it's in the navigation stack
+    /// (this is primarily a workaround for problems with the layout of the index view)
+    class IndexWrapperViewController: UIViewController {
+        override func viewWillAppear(_ animated: Bool) {
+            super.viewWillAppear(animated)
+            indexDetailChannel.debug("index container appeared")
+        }
+    }
+    
     func updateCollapsedStateForTraits() {
         switch direction {
             case .vertical:
@@ -138,9 +169,27 @@ fileprivate extension IndexDetailViewController {
         }
     }
     
+    func updateSizeConstraintsForDetail() {
+        sizeConstraint?.isActive = false
+        if !isCollapsed {
+            switch direction{
+                case .horizontal:
+                    sizeConstraint = detailNavigation.view.widthAnchor.constraint(equalTo: stackView.widthAnchor, multiplier: detailSizeFraction)
+
+                case .vertical:
+                    sizeConstraint = detailNavigation.view.heightAnchor.constraint(equalTo: stackView.heightAnchor, multiplier: detailSizeFraction)
+
+                default:
+                    break
+            }
+            sizeConstraint?.isActive = true
+        }
+    }
+    
     func transitionToCollapsed() {
         indexDetailChannel.debug("becoming collapsed")
 
+        updateSizeConstraintsForDetail()
         if let indexView = indexController.view, let detailView = detailNavigation.view {
             
             func hideIndexViewTemporarily() {
@@ -164,18 +213,24 @@ fileprivate extension IndexDetailViewController {
                 indexView.isHidden = false
                 
                 // insert the index view into the navigation stack
-                let enclosing = UIViewController()
-                enclosing.addChild(indexController)
-                enclosing.view.addSubview(indexView)
-                indexView.stickTo(view:enclosing.view)
+                let wrapper = makeWrapperForIndexController()
                 var items = detailNavigation.viewControllers
-                items.insert(enclosing, at: 1)
-                indexContainer = enclosing
+                items.insert(wrapper, at: 1)
+                indexWrapper = wrapper
                 detailNavigation.setViewControllers(items, animated: false)
             }
             
             UIView.animate(withDuration: animationDuration, animations: { hideIndexViewTemporarily() }, completion: { _ in updateNavigation() })
         }
+    }
+    
+    func makeWrapperForIndexController() -> IndexWrapperViewController {
+        let indexView = indexController.view!
+        let enclosing = IndexWrapperViewController()
+        enclosing.addChild(indexController)
+        enclosing.view.addSubview(indexView)
+        indexView.stickTo(view:enclosing.view)
+        return enclosing
     }
     
     func transitionFromCollapsed() {
@@ -191,7 +246,7 @@ fileprivate extension IndexDetailViewController {
                 indexController.removeFromParent()
                 stackView.insertArrangedSubview(indexView, at: 0)
                 addChild(indexController)
-                indexContainer = nil
+                indexWrapper = nil
                 
                 // start with either the index or the navigation view hidden
                 // we will animate one of them back to visibility, to generate a slide animation in the right direction
@@ -226,7 +281,7 @@ extension IndexDetailViewController: UINavigationControllerDelegate {
     public func navigationController(_ navigationController: UINavigationController, willShow viewController: UIViewController, animated: Bool) {
         indexDetailChannel.debug("showing \(viewController.title ?? String(describing: viewController))")
         
-        let showingIndex = viewController === indexContainer
+        let showingIndex = viewController === indexWrapper
         let showingRoot = viewController === detailRootController
         detailNavigation.isNavigationBarHidden = showingIndex || showingRoot
     }

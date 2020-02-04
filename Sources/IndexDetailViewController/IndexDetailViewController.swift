@@ -108,7 +108,7 @@ public extension IndexDetailViewController {
         // our root view is a stack which will contain the other views
         stackView = UIStackView()
         stackView.alignment = .fill
-        stackView.distribution = .fillEqually
+        stackView.distribution = .fill
         stackView.axis = .horizontal
         view = stackView
 
